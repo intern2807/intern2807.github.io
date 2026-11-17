@@ -8,149 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    /* Light theme (default). Change --accent to recolour the whole site. */
-    :root {
-      --bg: #faf9f7;
-      --fg: #1c1c1c;
-      --muted: #5f6368;
-      --line: #e4e1dc;
-      --card: #ffffff;
-      --accent: #0f766e;        /* deep teal */
-      --accent-soft: #e6f2f0;
-      --maxw: 860px;
-      --font-head: "IBM Plex Sans", system-ui, sans-serif;
-      --font-body: Inter, system-ui, sans-serif;
-      --font-tag: var(--font-body);
-      --head-weight: 600;
-      color-scheme: light;
-    }
-    /* Dark theme: used when the visitor's system is dark (unless they toggled to light),
-       or when they toggled to dark. */
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --bg: #121414;
-        --fg: #ececec;
-        --muted: #a0a6a6;
-        --line: #2a2e2e;
-        --card: #1a1d1d;
-        --accent: #5eead4;
-        --accent-soft: #15302d;
-        color-scheme: dark;
-      }
-    }
-    :root[data-theme="dark"] {
-      --bg: #121414;
-      --fg: #ececec;
-      --muted: #a0a6a6;
-      --line: #2a2e2e;
-      --card: #1a1d1d;
-      --accent: #5eead4;
-      --accent-soft: #15302d;
-      color-scheme: dark;
-    }
-    body { transition: background .2s, color .2s; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--font-body);
-      background: var(--bg);
-      color: var(--fg);
-      line-height: 1.65;
-      font-size: 17px;
-    }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    header {
-      position: sticky; top: 0; z-index: 10;
-      background: color-mix(in srgb, var(--bg) 88%, transparent);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--line);
-    }
-    nav {
-      max-width: var(--maxw); margin: 0 auto;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 14px 24px;
-    }
-    nav .name {
-      font-family: var(--font-head); font-weight: var(--head-weight); font-size: 19px; color: var(--fg);
-      opacity: 0; transform: translateY(4px); pointer-events: none;
-      transition: opacity .25s, transform .25s;
-    }
-    nav .name.show { opacity: 1; transform: none; pointer-events: auto; }
-    nav .name:hover { text-decoration: none; }
-    nav ul { list-style: none; display: flex; gap: 22px; }
-    nav ul a { color: var(--muted); font-size: 15px; }
-    nav ul a:hover { color: var(--accent); text-decoration: none; }
-    nav .right { display: flex; align-items: center; gap: 22px; }
-    .theme-toggle {
-      width: 34px; height: 34px; border-radius: 50%;
-      border: 1px solid var(--line); background: transparent; color: var(--fg);
-      cursor: pointer; display: grid; place-items: center;
-    }
-    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
-    .theme-toggle svg { width: 16px; height: 16px; }
-    .theme-toggle .sun { display: none; }
-    :root[data-active="dark"] .theme-toggle .sun { display: block; }
-    :root[data-active="dark"] .theme-toggle .moon { display: none; }
-
-    main { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
-    section { padding: 72px 0; border-bottom: 1px solid var(--line); }
-    section:last-of-type { border-bottom: none; }
-
-    h1, h2, h3 { font-family: var(--font-head); font-weight: var(--head-weight); line-height: 1.2; }
-    .card .meta { font-family: var(--font-tag); }
-    h1 { font-size: clamp(38px, 6vw, 56px); margin-bottom: 18px; }
-    h2 { font-size: 30px; margin-bottom: 24px; }
-    h3 { font-size: 20px; margin-bottom: 6px; }
-
-    .hero { padding-top: 96px; }
-    .hero .lead { font-size: 20px; color: var(--muted); max-width: 620px; }
-    .hero h1 .dot { color: var(--accent); }
-    h2::after {
-      content: ""; display: block; width: 36px; height: 3px;
-      background: var(--accent); border-radius: 2px; margin-top: 10px;
-    }
-
-    .about p { max-width: 680px; margin-bottom: 16px; }
-
-    /* Project tabs */
-    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
-    .tabs button {
-      font: inherit; font-size: 15px; cursor: pointer;
-      padding: 8px 16px; border-radius: 999px;
-      border: 1px solid var(--line); background: transparent; color: var(--muted);
-    }
-    .tabs button:hover { border-color: var(--accent); color: var(--accent); }
-    .tabs button[aria-selected="true"] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-    .panel { display: none; }
-    .panel.active { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
-    .card {
-      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-      padding: 22px; display: flex; flex-direction: column;
-      transition: border-color .15s, transform .15s;
-    }
-    .card:hover { border-color: var(--accent); transform: translateY(-2px); }
-    .card p { color: var(--muted); font-size: 15px; flex: 1; }
-    .card .meta { font-size: 13px; color: var(--muted); margin-top: 14px; display: flex; gap: 14px; }
-
-    .contact ul { list-style: none; display: grid; gap: 10px; }
-    .contact li { display: flex; gap: 12px; }
-    .contact li span { width: 90px; color: var(--muted); }
-
-    footer {
-      max-width: var(--maxw); margin: 0 auto; padding: 32px 24px 48px;
-      color: var(--muted); font-size: 14px;
-    }
-
-    @media (max-width: 600px) {
-      nav ul { gap: 14px; }
-      nav ul a { font-size: 14px; }
-      section { padding: 56px 0; }
-    }
-
-  </style>
+  <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/site.js"></script>
+  <script src="assets/viz.js" defer></script>
 </head>
 <body>
 
@@ -192,54 +52,67 @@
 
     <!-- Data Science -->
     <div class="panel active" id="ds" role="tabpanel">
-      <div class="card">
-        <h3>Acoustic monitoring of environmental noise</h3>
-        <p>Classifies environmental noise sources for an engineering group's acoustics practice. Presented at the Bauphysikertreffen, HFT Stuttgart 2025.</p>
-        <div class="meta"><span>Audio ML · Classification</span><!-- <a href="#">Talk →</a> --></div>
-      </div>
-      <div class="card">
-        <h3>Energy monitoring at scale</h3>
-        <p>Monitoring and analysis of energy data from more than 45,000 smart meters, built for an engineering group's energy services.</p>
-        <div class="meta"><span>Time series · Energy</span></div>
-      </div>
-      <div class="card">
-        <h3>Group-level data services</h3>
-        <p>Built and launched new data and AI services, including Data-as-a-Service offerings, that opened new revenue streams for an engineering group.</p>
-        <div class="meta"><span>ML products · DaaS</span></div>
-      </div>
+      <a class="card" href="projects/acoustic-monitoring.html">
+        <div class="viz" data-viz="acoustic"></div>
+        <div class="card-body">
+          <h3>Acoustic monitoring of environmental noise</h3>
+          <div class="meta"><span>Audio ML · Classification</span><span class="arrow">→</span></div>
+        </div>
+      </a>
+      <a class="card" href="projects/energy-monitoring.html">
+        <div class="viz" data-viz="energy"></div>
+        <div class="card-body">
+          <h3>Energy monitoring at scale</h3>
+          <div class="meta"><span>Time series · Energy</span><span class="arrow">→</span></div>
+        </div>
+      </a>
+      <a class="card" href="projects/data-services.html">
+        <div class="viz" data-viz="services"></div>
+        <div class="card-body">
+          <h3>Group-level data services</h3>
+          <div class="meta"><span>ML products · DaaS</span><span class="arrow">→</span></div>
+        </div>
+      </a>
     </div>
 
     <!-- Research -->
     <div class="panel" id="re" role="tabpanel">
-      <div class="card">
-        <h3>Artificial coupling of patterned neural networks on HD-MEAs</h3>
-        <p>Bachelor's thesis, Laboratory of Biosensors and Bioelectronics, ETH Zurich, 2024. Built the full pipeline (embedded closed-loop stimulation, experiment control, data analysis) to couple two feed-forward neuronal networks into one recurrent network. Higher stimulus amplitudes reliably increased the share of stimuli triggering oscillations.</p>
-        <div class="meta"><span>HD-MEA · Embedded · Electrophysiology</span><!-- <a href="bachelor-thesis.pdf">Thesis (PDF) →</a> --></div>
-      </div>
+      <a class="card" href="projects/hd-mea-coupling.html">
+        <div class="viz" data-viz="mea"></div>
+        <div class="card-body">
+          <h3>Artificial coupling of patterned neural networks on HD-MEAs</h3>
+          <div class="meta"><span>HD-MEA · Embedded · Electrophysiology</span><span class="arrow">→</span></div>
+        </div>
+      </a>
     </div>
 
     <!-- Electronics -->
     <div class="panel" id="el" role="tabpanel">
-      <div class="card">
-        <h3>Project title</h3>
-        <p>One or two sentences: what it does and how it's built.</p>
-        <div class="meta"><span>PCB · Embedded C</span><a href="#">Details →</a></div>
-      </div>
+      <a class="card" href="projects/electronics-project.html">
+        <div class="viz" data-viz="circuit"></div>
+        <div class="card-body">
+          <h3>Project title</h3>
+          <div class="meta"><span>PCB · Embedded C</span><span class="arrow">→</span></div>
+        </div>
+      </a>
     </div>
 
     <!-- Music -->
     <div class="panel" id="mu" role="tabpanel">
-      <div class="card">
-        <h3>Sara Brown</h3>
-        <p>Lead artist and executive producer of a pop project: 2.5M+ streams, radio rotation in Europe, the US and Asia, TV appearances and a feature in WIRED.</p>
-        <div class="meta"><span>Pop · Songwriting</span><!-- <a href="#">Listen →</a> --></div>
-      </div>
-      <div class="card">
-        <h3>Awards</h3>
-        <p>Winner, UK Songwriting Contest · Winner, Ableton Loop Sample Contest · Finalist, John Lennon Songwriting Contest · Semi-finalist, International Songwriting Competition.</p>
-        <div class="meta"><span>Songwriting · Production</span></div>
-      </div>
-      <!-- To embed a track, paste an embed iframe (Spotify, Bandcamp, SoundCloud) inside a card. -->
+      <a class="card" href="projects/sara-brown.html">
+        <div class="viz" data-viz="music"></div>
+        <div class="card-body">
+          <h3>Sara Brown</h3>
+          <div class="meta"><span>Pop · Songwriting</span><span class="arrow">→</span></div>
+        </div>
+      </a>
+      <a class="card" href="projects/awards.html">
+        <div class="viz" data-viz="awards"></div>
+        <div class="card-body">
+          <h3>Awards</h3>
+          <div class="meta"><span>Songwriting · Production</span><span class="arrow">→</span></div>
+        </div>
+      </a>
     </div>
 
     <!-- Miscellaneous -->
@@ -277,31 +150,6 @@
 <footer>© <span id="y"></span> Sara Ben Ali</footer>
 
 <script>
-  document.getElementById('y').textContent = new Date().getFullYear();
-
-  // Show the name in the nav only once the big name has scrolled out of view.
-  const navName = document.getElementById('navName');
-  new IntersectionObserver(([e]) => navName.classList.toggle('show', !e.isIntersecting),
-    { rootMargin: '-60px 0px 0px 0px' }).observe(document.getElementById('heroName'));
-
-  // Theme: follow system by default; a click overrides and is remembered.
-  const root = document.documentElement;
-  const mq = window.matchMedia('(prefers-color-scheme: dark)');
-  let saved = null;
-  try { saved = localStorage.getItem('theme'); } catch (e) {}
-  function apply() {
-    const active = saved || (mq.matches ? 'dark' : 'light');
-    if (saved) root.setAttribute('data-theme', saved); else root.removeAttribute('data-theme');
-    root.setAttribute('data-active', active);
-  }
-  apply();
-  mq.addEventListener('change', apply);
-  document.getElementById('themeToggle').addEventListener('click', () => {
-    saved = root.getAttribute('data-active') === 'dark' ? 'light' : 'dark';
-    try { localStorage.setItem('theme', saved); } catch (e) {}
-    apply();
-  });
-
   const tabs = document.querySelectorAll('.tabs button');
   tabs.forEach(btn => btn.addEventListener('click', () => {
     tabs.forEach(b => b.setAttribute('aria-selected', 'false'));
