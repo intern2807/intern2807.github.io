@@ -27,6 +27,7 @@
   .viz .fire { transform-box: fill-box; transform-origin: center; animation: v-fire 3.2s ease-out var(--t,0s) infinite; }
   .viz .flow { animation: v-flow var(--d,1.6s) linear infinite; }
   .viz .draw { animation: v-draw 6s ease-in-out infinite; }
+  .viz .slide { animation: v-slide var(--d,10s) linear infinite; }
   .viz .scan { animation: v-scan 5s ease-in-out infinite alternate; }
   .viz .ring { transform-box: fill-box; transform-origin: center; animation: v-ring 3.6s ease-out var(--t,0s) infinite; }
   .viz .spin { transform-origin: 160px 90px; animation: v-spin 40s linear infinite; }
@@ -36,6 +37,7 @@
   @keyframes v-fire { 0% { opacity: 1; transform: scale(1.8); } 35%,100% { opacity: .2; transform: scale(1); } }
   @keyframes v-flow { to { stroke-dashoffset: -24; } }
   @keyframes v-draw { 0% { stroke-dashoffset: 600; } 60%,100% { stroke-dashoffset: 0; } }
+  @keyframes v-slide { to { transform: translateX(-320px); } }
   @keyframes v-scan { from { transform: translateX(0); } to { transform: translateX(220px); } }
   @keyframes v-ring { from { transform: scale(.2); opacity: .9; } to { transform: scale(1.6); opacity: 0; } }
   @keyframes v-spin { to { transform: rotate(360deg); } }
@@ -59,20 +61,42 @@
         stroke: 'currentColor', 'stroke-width': 1.5, 'stroke-dasharray': '4 4' }, win);
     },
 
-    // Grid of smart meters lighting up, with a load curve being drawn.
+    // Live load curves from many meters scrolling past, an anomaly flagged on the busiest one,
+    // and a strip of meters blinking as their readings come in.
     energy(svg) {
-      const rand = rng(11), cols = 22, rows = 7;
-      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-        el('circle', { cx: 18 + c * 13.5, cy: 18 + r * 13, r: 3, fill: 'currentColor', class: 'blink',
-          style: `--d:${r2(2 + rand() * 4)}s;--t:-${r2(rand() * 6)}s` }, svg);
+      const rand = rng(11), TAU = Math.PI * 2;
+      const traces = [
+        { base: 62,  amp: 1.0, speed: 9,  w: 2.2, op: 1,   spike: true, fill: true },
+        { base: 86,  amp: 0.7, speed: 13, w: 1.4, op: .55 },
+        { base: 106, amp: 0.6, speed: 7,  w: 1.4, op: .4 },
+        { base: 124, amp: 0.5, speed: 11, w: 1.2, op: .3 }
+      ];
+      traces.forEach((t, i) => {
+        // Periodic over W so two copies side by side scroll seamlessly.
+        const ph = [rand() * TAU, rand() * TAU, rand() * TAU, rand() * TAU];
+        const y = x => t.base - t.amp * (
+          14 * Math.sin(TAU * x / W + ph[0]) + 7 * Math.sin(TAU * 3 * x / W + ph[1]) +
+          4 * Math.sin(TAU * 8 * x / W + ph[2]) + 2.5 * Math.sin(TAU * 21 * x / W + ph[3]) +
+          (t.spike ? 34 * Math.exp(-(((x % W) - 200) ** 2) / 18) : 0));
+        let d = '';
+        for (let x = 0; x <= 2 * W; x += 3) d += `${d ? ' L' : 'M'} ${x} ${r2(y(x))}`;
+        const g = el('g', { class: 'slide', style: `--d:${t.speed}s` }, svg);
+        if (t.fill) el('path', { d: `${d} L ${2 * W} 180 L 0 180 Z`, fill: 'currentColor', 'fill-opacity': .1 }, g);
+        el('path', { d, fill: 'none', stroke: 'currentColor', 'stroke-width': t.w, 'stroke-opacity': t.op,
+          'stroke-linejoin': 'round' }, g);
+        if (t.spike) for (const off of [0, W]) {
+          const sx = 200 + off, sy = r2(y(200));
+          el('circle', { cx: sx, cy: sy, r: 10, fill: 'none', stroke: 'currentColor', 'stroke-width': 1.5, class: 'ring' }, g);
+          el('circle', { cx: sx, cy: sy, r: 3.5, fill: 'currentColor' }, g);
+        }
+      });
+      // "Now" line on the right edge.
+      el('line', { x1: 286, y1: 14, x2: 286, y2: 140, stroke: 'currentColor', 'stroke-width': 1, 'stroke-dasharray': '3 4', 'stroke-opacity': .6 }, svg);
+      // Meter strip.
+      for (let c = 0; c < 40; c++) {
+        el('rect', { x: 6 + c * 7.8, y: 156, width: 4.6, height: 12, rx: 1.2, fill: 'currentColor', class: 'blink',
+          style: `--d:${r2(1.2 + rand() * 2.5)}s;--t:-${r2(rand() * 4)}s` }, svg);
       }
-      let d = '';
-      for (let x = 10; x <= 310; x += 6) {
-        const y = 150 - 22 * Math.sin(x / 30) * Math.sin(x / 90 + 1) - 10 * Math.sin(x / 9) * rand();
-        d += `${d ? ' L' : 'M'} ${x} ${r2(y)}`;
-      }
-      el('path', { d, fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linejoin': 'round',
-        'stroke-dasharray': 600, class: 'draw' }, svg);
     },
 
     // Hub and outer nodes with data packets travelling along the links.
