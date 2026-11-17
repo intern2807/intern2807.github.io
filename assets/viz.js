@@ -21,17 +21,19 @@
   const r2 = x => Math.round(x * 100) / 100;
 
   const css = `
-  .viz .grow { transform-box: fill-box; transform-origin: center; animation: v-grow var(--d,1.2s) ease-in-out var(--t,0s) infinite alternate; }
-  .viz .grow-b { transform-box: fill-box; transform-origin: bottom; animation: v-grow var(--d,1.2s) ease-in-out var(--t,0s) infinite alternate; }
-  .viz .blink { animation: v-blink var(--d,4s) ease-in-out var(--t,0s) infinite; }
-  .viz .fire { transform-box: fill-box; transform-origin: center; animation: v-fire 3.2s ease-out var(--t,0s) infinite; }
-  .viz .flow { animation: v-flow var(--d,1.6s) linear infinite; }
-  .viz .draw { animation: v-draw 6s ease-in-out infinite; }
-  .viz .slide { animation: v-slide var(--d,10s) linear infinite; }
-  .viz .scan { animation: v-scan 5s ease-in-out infinite alternate; }
-  .viz .ring { transform-box: fill-box; transform-origin: center; animation: v-ring 3.6s ease-out var(--t,0s) infinite; }
-  .viz .spin { transform-origin: 160px 90px; animation: v-spin 40s linear infinite; }
-  .viz .twinkle { transform-box: fill-box; transform-origin: center; animation: v-twinkle var(--d,3s) ease-in-out var(--t,0s) infinite; }
+  /* --slow scales every animation: 1 = original speed, higher = calmer. */
+  .viz { --slow: 2.2; }
+  .viz .grow { transform-box: fill-box; transform-origin: center; animation: v-grow calc(var(--d,1.2s) * var(--slow)) ease-in-out calc(var(--t,0s) * var(--slow)) infinite alternate; }
+  .viz .grow-b { transform-box: fill-box; transform-origin: bottom; animation: v-grow calc(var(--d,1.2s) * var(--slow)) ease-in-out calc(var(--t,0s) * var(--slow)) infinite alternate; }
+  .viz .blink { animation: v-blink calc(var(--d,4s) * var(--slow)) ease-in-out calc(var(--t,0s) * var(--slow)) infinite; }
+  .viz .fire { transform-box: fill-box; transform-origin: center; animation: v-fire calc(3.2s * var(--slow)) ease-out calc(var(--t,0s) * var(--slow)) infinite; }
+  .viz .flow { animation: v-flow calc(var(--d,1.6s) * var(--slow)) linear infinite; }
+  .viz .draw { animation: v-draw calc(6s * var(--slow)) ease-in-out infinite; }
+  .viz .slide { animation: v-slide calc(var(--d,10s) * var(--slow)) linear infinite; }
+  .viz .scan { animation: v-scan calc(5s * var(--slow)) ease-in-out infinite alternate; }
+  .viz .ring { transform-box: fill-box; transform-origin: center; animation: v-ring calc(3.6s * var(--slow)) ease-out calc(var(--t,0s) * var(--slow)) infinite; }
+  .viz .spin { transform-origin: 160px 90px; animation: v-spin calc(40s * var(--slow)) linear infinite; }
+  .viz .twinkle { transform-box: fill-box; transform-origin: center; animation: v-twinkle calc(var(--d,3s) * var(--slow)) ease-in-out calc(var(--t,0s) * var(--slow)) infinite; }
   @keyframes v-grow { from { transform: scaleY(.15); } to { transform: scaleY(1); } }
   @keyframes v-blink { 0%,100% { opacity: .18; } 45%,55% { opacity: 1; } }
   @keyframes v-fire { 0% { opacity: 1; transform: scale(1.8); } 35%,100% { opacity: .2; transform: scale(1); } }
@@ -115,7 +117,7 @@
         const p = el('circle', { r: 3.2, fill: 'currentColor' }, svg);
         const out = i % 2 === 0;
         if (!reduce) {
-          el('animateMotion', { dur: `${2 + (i % 3) * 0.6}s`, repeatCount: 'indefinite', begin: `${-i * 0.4}s`,
+          el('animateMotion', { dur: `${(2 + (i % 3) * 0.6) * 2.2}s`, repeatCount: 'indefinite', begin: `${-i * 0.9}s`,
             path: out ? `M ${cx} ${cy} L ${x} ${y}` : `M ${x} ${y} L ${cx} ${cy}` }, p);
         } else { p.setAttribute('cx', (x + cx) / 2); p.setAttribute('cy', (y + cy) / 2); }
         el('circle', { cx: x, cy: y, r: 9, fill: 'var(--card)', stroke: 'currentColor', 'stroke-width': 1.8 }, svg);
