@@ -151,7 +151,12 @@ a.card:hover { text-decoration: none; }
 .back:hover { color: var(--accent); text-decoration: none; }
 .project-page h1 { font-size: clamp(30px, 4.5vw, 42px); margin-bottom: 10px; }
 .project-page .tags { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
-.project-page .viz { border-radius: 12px; border: 1px solid var(--line); overflow: hidden; margin-bottom: 36px; }
+.project-page .viz { float: right; width: 260px; margin: 4px 0 20px 32px;
+  border-radius: 10px; border: 1px solid var(--line); overflow: hidden; opacity: .7; }
+.project-page .next { clear: both; }
+@media (max-width: 640px) {
+  .project-page .viz { float: none; margin: 0 0 24px; }
+}
 .project-page h2 { font-size: 22px; margin: 36px 0 12px; }
 .project-page h2::after { display: none; }
 .project-page p, .project-page li { max-width: 680px; }

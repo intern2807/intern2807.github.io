@@ -56,7 +56,7 @@
         const env = 0.35 + 0.65 * Math.abs(Math.sin(i / 7) * Math.cos(i / 17));
         const h = r2(20 + env * 110 * (0.6 + 0.4 * rand()));
         const b = el('rect', { x: r2(i * bw + bw * 0.2), y: r2(90 - h / 2), width: r2(bw * 0.6), height: h, rx: 1.2,
-          fill: 'currentColor', class: 'grow', style: `--d:${r2(0.6 + rand() * 0.9)}s;--t:-${r2(rand() * 2)}s` }, svg);
+          fill: 'currentColor', class: 'grow', style: `--d:${r2(1.4 + rand() * 1.4)}s;--t:-${r2(rand() * 3)}s` }, svg);
       }
       const win = el('g', { class: 'scan' }, svg);
       el('rect', { x: 20, y: 22, width: 80, height: 136, rx: 6, fill: 'currentColor', 'fill-opacity': .08,
@@ -97,7 +97,7 @@
       // Meter strip.
       for (let c = 0; c < 40; c++) {
         el('rect', { x: 6 + c * 7.8, y: 156, width: 4.6, height: 12, rx: 1.2, fill: 'currentColor', class: 'blink',
-          style: `--d:${r2(1.2 + rand() * 2.5)}s;--t:-${r2(rand() * 4)}s` }, svg);
+          style: `--d:${r2(2.5 + rand() * 3)}s;--t:-${r2(rand() * 5)}s` }, svg);
       }
     },
 
@@ -171,7 +171,7 @@
         const a = (i / n) * 360, len = r2(14 + rand() * 30);
         const bar = el('g', { transform: `rotate(${a} ${cx} ${cy})` }, g);
         el('rect', { x: cx - 1.6, y: cy - 34 - len, width: 3.2, height: len, rx: 1.6, fill: 'currentColor', class: 'grow-b',
-          style: `--d:${r2(0.4 + rand() * 0.7)}s;--t:-${r2(rand())}s` }, bar);
+          style: `--d:${r2(1.1 + rand() * 1.1)}s;--t:-${r2(rand() * 2)}s` }, bar);
       }
       el('circle', { cx, cy, r: 22, fill: 'currentColor', 'fill-opacity': .2, stroke: 'currentColor', 'stroke-width': 1.5 }, svg);
       el('circle', { cx, cy, r: 4, fill: 'currentColor' }, svg);
