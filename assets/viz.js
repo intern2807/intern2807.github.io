@@ -22,7 +22,7 @@
 
   const css = `
   /* --slow scales every animation: 1 = original speed, higher = calmer. */
-  .viz { --slow: 2.2; }
+  .viz { --slow: 3; }
   .viz .grow { transform-box: fill-box; transform-origin: center; animation: v-grow calc(var(--d,1.2s) * var(--slow)) ease-in-out calc(var(--t,0s) * var(--slow)) infinite alternate; }
   .viz .grow-b { transform-box: fill-box; transform-origin: bottom; animation: v-grow calc(var(--d,1.2s) * var(--slow)) ease-in-out calc(var(--t,0s) * var(--slow)) infinite alternate; }
   .viz .blink { animation: v-blink calc(var(--d,4s) * var(--slow)) ease-in-out calc(var(--t,0s) * var(--slow)) infinite; }
@@ -117,7 +117,7 @@
         const p = el('circle', { r: 3.2, fill: 'currentColor' }, svg);
         const out = i % 2 === 0;
         if (!reduce) {
-          el('animateMotion', { dur: `${(2 + (i % 3) * 0.6) * 2.2}s`, repeatCount: 'indefinite', begin: `${-i * 0.9}s`,
+          el('animateMotion', { dur: `${(2 + (i % 3) * 0.6) * 3}s`, repeatCount: 'indefinite', begin: `${-i * 1.2}s`,
             path: out ? `M ${cx} ${cy} L ${x} ${y}` : `M ${x} ${y} L ${cx} ${cy}` }, p);
         } else { p.setAttribute('cx', (x + cx) / 2); p.setAttribute('cy', (y + cy) / 2); }
         el('circle', { cx: x, cy: y, r: 9, fill: 'var(--card)', stroke: 'currentColor', 'stroke-width': 1.8 }, svg);
